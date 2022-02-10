@@ -92,3 +92,109 @@
 
   ![image.png](https://cdn.nlark.com/yuque/0/2021/png/12759906/1622415675975-7832671b-1991-408d-a342-1bc19d94afda.png)
 
+
+
+## 2、RocketMQ快速入门
+
+
+
+RocketMQ是阿里巴巴2016年开源的MQ中间件，使用Java语言开发，在阿里内部，RocketMQ承接了例如“双11”等高并发场景的消息流转，能够处理万亿级别的消息。
+
+
+
+### 2.1 准备工作
+
+#### 2.1.1 下载RocketMQ
+
+https://www.apache.org/dyn/closer.cgi?path=rocketmq/4.5.1/rocketmq-all-4.5.1-bin-release.zip
+
+#### 2.1.2 环境要求
+
+- Java8
+- 源码安装需要安装Maven 3.2.x
+
+### 2.2 安装
+
+1. 下载完后，上传到Linux服务器，我这边用xftp上传到`/opt`目录
+2. 然后用`unzip xxx`命令解压
+
+![img](https://cdn.nlark.com/yuque/0/2022/png/12759906/1644335074802-3084ff2c-4275-4321-bcf5-d9868f090f04.png)
+
+1. 解压之后，移动到`/usr/local/rocketmq`目录下
+
+![img](https://cdn.nlark.com/yuque/0/2022/png/12759906/1644335114738-dde4e626-05dc-4a74-bacb-aab75c65a0fb.png)
+
+1. 安装完成
+2. 目录介绍
+
+- bin：启动脚本，包括shell脚本和CMD脚本
+- conf：实例配置文件 ，包括broker配置文件、logback配置文件等
+
+- lib：依赖jar包，包括Netty、commons-lang、FastJSON等
+
+
+
+### 2.3 启动RocketMQ
+
+
+
+1、启动NameServer
+
+```markdown
+# 1.启动NameServer
+nohup sh bin/mqnamesrv &
+# 2.查看启动日志
+tail -f ~/logs/rocketmqlogs/namesrv.log
+```
+
+2、启动Broker
+
+```markdown
+# 1.启动Broker
+nohup sh bin/mqbroker -n localhost:9876 &
+# 2.查看启动日志
+tail -f ~/logs/rocketmqlogs/broker.log 
+```
+
+启动成功可以查看对应日志情况，或者用jps查看进程：
+
+![img](https://cdn.nlark.com/yuque/0/2022/png/12759906/1644500102213-b6ce6fa4-89a6-44bc-bdba-d197f3876ec5.png)
+
+如果启动失败，则需要看下对应得配置文件，runbroker.sh/runserver.sh，里面的内存配置是否大于你服务器/虚拟机的内存；
+
+```
+JAVA_OPT="${JAVA_OPT} -server -Xms256m -Xmx256m -Xmn128m -XX:MetaspaceSize=128m  -XX:MaxMetaspaceSize=320m"
+```
+
+
+
+### 2.4 测试RocketMQ
+
+首先必须进到RocketMQ的安装目录的bin目录下，
+
+发送消息：
+
+```shell
+# 1.设置环境变量
+export NAMESRV_ADDR=localhost:9876
+# 2.使用安装包的Demo发送消息
+sh bin/tools.sh org.apache.rocketmq.example.quickstart.Producer
+```
+
+消费消息：
+
+```shell
+# 1.设置环境变量
+export NAMESRV_ADDR=localhost:9876
+# 2.接收消息
+sh bin/tools.sh org.apache.rocketmq.example.quickstart.Consumer
+```
+
+关闭RocketMQ：
+
+```shell
+# 1.关闭NameServer
+sh bin/mqshutdown namesrv
+# 2.关闭Broker
+sh bin/mqshutdown broker
+```
