@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RocketMQ.iml" filepath="$PROJECT_DIR$/RocketMQ.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RoecktMQ_01/RoecktMQ_01.iml" filepath="$PROJECT_DIR$/RoecktMQ_01/RoecktMQ_01.iml" />
     </modules>
   </component>
 </project>
